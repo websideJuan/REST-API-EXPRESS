@@ -26,11 +26,6 @@ app.use(cors({
 app.disable('x-powered-by')
 
 app.get('/movies', (req, res) => {
-  // const origin = req.header('origin')
-  // if (ACCPTED_ORIGINS.includes(origin) || !origin) {
-  //   res.header('Access-Control-Allow-Origin', origin)
-  // }
-
   const { genre } = req.query
   if (genre) {
     const filterMovie = movies.filter(
@@ -42,11 +37,6 @@ app.get('/movies', (req, res) => {
 })
 
 app.get('/movies/:id', (req, res) => {
-  // const origin = req.header('origin')
-  // if (ACCPTED_ORIGINS.includes(origin) || !origin) {
-  //   res.header('Access-Control-Allow-Origin', origin)
-  // }
-
   const { id } = req.params
   const movie = movies.find(libro => libro.id === id)
   if (movie) return res.json(movie)

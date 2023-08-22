@@ -1,10 +1,11 @@
 {
-  "name": "backend",
+  "name": "rest-api",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
-    "dev": "nodemon index.js"
+    "start":"node app.js",
+    "dev": "nodemon app.js"
   },
   "keywords": [],
   "author": "",
