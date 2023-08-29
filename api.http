@@ -1,34 +1,32 @@
 
 ### Recuperar todas las peliculas
-GET http://localhost:3000/movies
+GET http://localhost:3000/users
 
 ### Recuperar una pelicula por id
-GET  http://localhost:3000/movies/dcdd0fad-a94c-4810-8acc-5f108d3b18c3
+GET  http://localhost:3000/users/64ebbe2588bc6375f7a96857
 
 ### Recuperar todas las peliculas por genero
 GET http://localhost:3000/movies?genre=action
 
 ### Crear una pelicula con POST
-POST http://localhost:3000/movies
+POST http://localhost:3000/users
 Content-Type: application/json
 
 {
-    "title":"The godfather",
-    "genre": [
-        "Crime",
-        "Drama"
-    ],
-    "director":"Francis Ford Coppola",
-    "year": 1975,
-    "duration": 175,
-    "rate": 0,
-    "poster": "https://img.fruugo.com/product/4/49/14441494_max.jpg"
+    "userNAme": "ConniViolenta",
+    "password": 230317,
+    "emailUser": "conniformas.sf@gmail.com",
+    "image": "juan33.png"
 }
+
 ### Actualizar una pelicula
-PATCH http://localhost:3000/movies/dcdd0fad-a94c-4810-8acc-5f108d3b18c3
+PATCH http://localhost:3000/users/64ebc3f3397a3b0ae566d9a5
 Content-Type: application/json
 
 {
-    "id":"2",
-    "year": 1999
+    "userNAme":"juanDev",
+    "password": "8327238"
 }
+
+### Delete User 
+DELETE http://localhost:3000/users/64ebc34586df58da689af09a

@@ -1,100 +1,35 @@
-const express = require('express')
-const crypto = require('node:crypto')
-const cors = require('cors')
-const movies = require('./movies.json')
-const { validateMovies, validatePartialMovies } = require('./schemas/movies.js')
-
+import express from 'express'
+import { corsMiddleware } from './middlewares/corsMiddleware.js'
+import { moviesRouter } from './routes/movies.js'
+import { usersRouter } from './routes/users.js'
 const app = express()
+
+app.use(corsMiddleware())
 app.use(express.json())
-app.use(cors({
-  origin: (origin, callback) => {
-    const ACCPTED_ORIGINS = [
-      'http://localhost:5500'
-    ]
+// app.use((req, res, next) => {
+//   if (req.method !== 'POST') return next()
+//   if (req.headers['Content-Type'] !== 'application/json') return next()
 
-    if (ACCPTED_ORIGINS.includes(origin)) {
-      return callback(null, true)
-    }
+//   let body = ''
 
-    if (!origin) {
-      return callback(null, true)
-    }
+//   req.on('data', chunk => {
+//     body += chunk.toString()
+//   })
 
-    return callback(new Error('Not allowed by CORS'))
-  }
-}))
+//   req.on('end', async () => {
+//     const data = JSON.parse(body)
+//     data.timestand = Date.now()
+//     req.body = data
+//     next()
+//   })
+// })
+
 app.disable('x-powered-by')
 
-app.get('/movies', (req, res) => {
-  const { genre } = req.query
-  if (genre) {
-    const filterMovie = movies.filter(
-      movie => movie.genre.some(g => g.toLowerCase() === genre.toLowerCase())
-    )
-    return res.json(filterMovie)
-  }
-  res.json(movies)
-})
+app.use('/movies', moviesRouter)
+app.use('/users', usersRouter)
 
-app.get('/movies/:id', (req, res) => {
-  const { id } = req.params
-  const movie = movies.find(libro => libro.id === id)
-  if (movie) return res.json(movie)
-
-  res.status(404).json({ message: 'Movie not found' })
-})
-
-app.post('/movies', (req, res) => {
-  const resutl = validateMovies(req.body)
-
-  if (resutl.error) {
-    return res.status(400).json({ error: resutl.error.message })
-  }
-  const newMovie = {
-    id: crypto.randomUUID(),
-    ...resutl.data
-  }
-
-  movies.push(newMovie)
-  res.status(201).json(newMovie)
-})
-
-app.patch('/movies/:id', (req, res) => {
-  const resutl = validatePartialMovies(req.body)
-
-  if (!resutl.success) {
-    return res.status(400).json({ error: resutl.error.message })
-  }
-
-  const { id } = req.params
-
-  const indexMovie = movies.findIndex(movie => movie.id === id)
-
-  if (movies[indexMovie] === -1) {
-    return res.status(404).json({ message: '404 movie not found' })
-  }
-
-  const updateMovie = {
-    ...movies[indexMovie],
-    ...resutl.data
-  }
-
-  movies[indexMovie] = updateMovie
-  return res.json(updateMovie)
-})
-
-app.delete('/movies/:id', (req, res) => {
-  const { id } = req.params
-  const indexMovie = movies.findIndex(movie => movie.id === id)
-
-  if (indexMovie === -1) {
-    return res.status(404).json({ message: 'Muvie not found' })
-  }
-
-  movies.splice(indexMovie, 1)
-
-  return res.json({ message: 'Movie deleted' })
-})
+// app.patch('/users/:id')
 
 app.use((req, res) => {
   res.status(404).send('404 not found')
